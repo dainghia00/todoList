@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  database:
+      container_name: todo-list
+      image: postgres
+      restart: always
+      env_file: .env
+      ports:
+        - '${POSTGRES_PORT}:5431'
+      volumes:
+        - db-data:/var/lib/postgressql/data/
+      healthcheck:
+        test:
+          [
+            'CMD-SHELL',
+            "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'",
+          ]
+        interval: 10s
+        timeout: 30s
+        retries: 30
+        start_period: 80s
+volumes:
+  db-data:
